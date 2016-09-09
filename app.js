@@ -4,23 +4,27 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var passport = require('passport');
+
+
+
+
+
 var mongoose = require('mongoose');
+mongoose.connect('mongodb://localhost/dummy');
 
-
+require('./Api/passport');
 
 var app = express();
 
 // view engine setup
 var routes = require('./routes');
 
-mongoose.connect('mongodb://localhost/dummy');
+
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
 
-app.get('/', function(req, res, next) {
-  res.sendFile(path.join(__dirname, 'views', 'index.html'));
-});
 app.use(express.static(path.join(__dirname, 'public')));
 
 // uncomment after placing your favicon in /public
@@ -29,12 +33,14 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+
 app.use(cookieParser());
 
-
-
+app.use(passport.initialize());
 app.use('/', routes);
-
+app.get('/', function(req, res, next) {
+  res.sendFile(path.join(__dirname, 'views', 'index.html'));
+});
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var err = new Error('Not Found');
@@ -46,25 +52,25 @@ app.use(function(req, res, next) {
 
 // development error handler
 // will print stacktrace
-if (app.get('env') === 'development') {
-  app.use(function(err, req, res, next) {
-    res.status(err.status || 500);
-    res.render('error', {
-      message: err.message,
-      error: err
-    });
-  });
-}
+//if (app.get('env') === 'development') {
+//  app.use(function(err, req, res, next) {
+//    res.status(err.status || 500);
+//    res.render('error', {
+//      message: err.message,
+//      error: err
+//    });
+//  });
+//}
 
 // production error handler
-// no stacktraces leaked to user
-app.use(function(err, req, res, next) {
-  res.status(err.status || 500);
-  res.render('error', {
-    message: err.message,
-    error: {}
-  });
-});
+//// no stacktraces leaked to user
+//app.use(function(err, req, res, next) {
+//  res.status(err.status || 500);
+//  res.render('error', {
+//    message: err.message,
+//    error: {}
+//  });
+//});
 
 app.listen(3030);
 module.exports = app;

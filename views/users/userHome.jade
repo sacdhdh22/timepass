@@ -3,8 +3,10 @@ html
    script(src='/bower_components/angular/angular.min.js')
    script(src='/usersController.js')
    body(ng-app='myApp', ng-controller='regiterDependentsCtrl')
+      #{usere}
       form(ng-submit='register()')
-         h1  Register Dependents
+
+         h1  Register Dependents #{JSON.stringify(user)}
          |     Full Name
          input(type='text', ,='', ng-model='fullname')
          |     Username
